@@ -22,7 +22,7 @@ export class TournamentController {
 
   @Post()
   @Roles(1)
-  create(@Body() createTournamentDto: CreateTournamentDto) {
+  enrollUser(@Body() createTournamentDto: CreateTournamentDto) {
     return this.tournamentService.createTournament(createTournamentDto);
   }
 
