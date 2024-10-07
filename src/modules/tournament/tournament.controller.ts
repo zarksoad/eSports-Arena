@@ -26,22 +26,12 @@ export class TournamentController {
     return this.tournamentService.createTournament(createTournamentDto);
   }
 
-  @Get()
-  findAll() {
-    return this.tournamentService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tournamentService.findOne(+id);
-  }
-
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateTournamentDto: UpdateTournamentDto,
   ) {
-    return this.tournamentService.update(+id, updateTournamentDto);
+    return this.tournamentService.UpdateTournament(id, updateTournamentDto);
   }
 
   @Delete(':id')

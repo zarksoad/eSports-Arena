@@ -21,22 +21,18 @@ export class TournamentService {
     return this.tournamentRepository.save(book);
   }
 
-  findAll() {
-    return `This action returns all tournament`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} tournament`;
-  }
-
-  update(id: number, updateTournamentDto: UpdateTournamentDto) {
-    return `This action updates a #${id} tournament`;
-  }
-
   async deleteTournament(id: number): Promise<Tournament> {
-    console.log('Aqui llego');
     const tournament = await this.checkTournamentService.checkTournament(id);
     tournament.status = false;
+    return await this.tournamentRepository.save(tournament);
+  }
+
+  async UpdateTournament(
+    id: number,
+    updateTournamentDto: UpdateTournamentDto,
+  ): Promise<Tournament> {
+    const tournament = await this.checkTournamentService.checkTournament(id);
+    Object.assign(tournament, updateTournamentDto);
     return await this.tournamentRepository.save(tournament);
   }
 }
