@@ -1,3 +1,4 @@
+import { CheckTournamentService } from './services/find.tournament-by-id.service';
 import { Injectable } from '@nestjs/common';
 import { CreateTournamentDto } from './dto/create-tournament.dto';
 import { UpdateTournamentDto } from './dto/update-tournament.dto';
@@ -10,6 +11,7 @@ export class TournamentService {
   constructor(
     @InjectRepository(Tournament)
     private readonly tournamentRepository: Repository<Tournament>,
+    private readonly checkTournamentService: CheckTournamentService,
   ) {}
 
   async createTournament(
@@ -31,7 +33,10 @@ export class TournamentService {
     return `This action updates a #${id} tournament`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tournament`;
+  async deleteTournament(id: number): Promise<Tournament> {
+    console.log('Aqui llego');
+    const tournament = await this.checkTournamentService.checkTournament(id);
+    tournament.status = false;
+    return await this.tournamentRepository.save(tournament);
   }
 }

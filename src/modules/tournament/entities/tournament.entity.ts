@@ -7,4 +7,7 @@ export class Tournament {
 
   @Column({ type: 'varchar', unique: true })
   name: string;
+
+  @Column({ type: 'boolean', default: true })
+  status: boolean;
 }

@@ -13,7 +13,6 @@ import { CreateTournamentDto } from './dto/create-tournament.dto';
 import { UpdateTournamentDto } from './dto/update-tournament.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
-import { UserRole } from 'src/common/decorators/user/userRole.decorator';
 import { Roles } from 'src/common/decorators/roles.decorator';
 
 @Controller('tournaments')
@@ -46,7 +45,7 @@ export class TournamentController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tournamentService.remove(+id);
+  remove(@Param('id') id: number) {
+    return this.tournamentService.deleteTournament(id);
   }
 }
