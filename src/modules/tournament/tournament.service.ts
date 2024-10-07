@@ -1,3 +1,4 @@
+import { CheckTournamentService } from './services/find.tournament-by-id.service';
 import { Injectable } from '@nestjs/common';
 import { CreateTournamentDto } from './dto/create-tournament.dto';
 import { UpdateTournamentDto } from './dto/update-tournament.dto';
@@ -10,6 +11,7 @@ export class TournamentService {
   constructor(
     @InjectRepository(Tournament)
     private readonly tournamentRepository: Repository<Tournament>,
+    private readonly checkTournamentService: CheckTournamentService,
   ) {}
 
   async createTournament(
@@ -19,19 +21,18 @@ export class TournamentService {
     return this.tournamentRepository.save(book);
   }
 
-  findAll() {
-    return `This action returns all tournament`;
+  async deleteTournament(id: number): Promise<Tournament> {
+    const tournament = await this.checkTournamentService.checkTournament(id);
+    tournament.status = false;
+    return await this.tournamentRepository.save(tournament);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tournament`;
-  }
-
-  update(id: number, updateTournamentDto: UpdateTournamentDto) {
-    return `This action updates a #${id} tournament`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} tournament`;
+  async UpdateTournament(
+    id: number,
+    updateTournamentDto: UpdateTournamentDto,
+  ): Promise<Tournament> {
+    const tournament = await this.checkTournamentService.checkTournament(id);
+    Object.assign(tournament, updateTournamentDto);
+    return await this.tournamentRepository.save(tournament);
   }
 }
