@@ -20,7 +20,10 @@ export class LogInService {
       loginDto.password,
       user.password,
     );
-    const { accessToken } = await this.generateTokenService.token(user.id);
+    const { accessToken } = await this.generateTokenService.token(
+      user.id,
+      user.role_id,
+    );
     return { message: 'this is your token', accessToken };
   }
 }

@@ -27,7 +27,7 @@ export class InsertUserService {
       SELECT email FROM users WHERE email IN('player@eSportArena.com')
       `);
     if (existingUser.length > 0) {
-      console.log('Visitor already exists, skipping insertion.');
+      console.log('player already exists, skipping insertion.');
       return;
     }
 
