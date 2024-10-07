@@ -7,8 +7,9 @@ export class GenerateTokenService {
 
   async token(
     userId: number,
+    roleId: number,
   ): Promise<{ message: string; accessToken: string }> {
-    const payload = { userId: userId };
+    const payload = { userId: userId, roleId: roleId };
     const accessToken = await this.jwtService.signAsync(payload);
     return {
       message: 'This is the token',

@@ -4,6 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from 'config/configuration';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtStrategy } from './modules/auth/strategies/jwt.strategy';
+import { AppInitializer } from './seeds/seeds';
+import { RoleService } from './modules/auth/services/insert-seeds/insert.role-seed.service';
+import { InsertUserService } from './modules/auth/services/insert-seeds/insert-users-seed.service';
 
 @Module({
   imports: [
@@ -28,6 +31,6 @@ import { JwtStrategy } from './modules/auth/strategies/jwt.strategy';
     }),
     AuthModule,
   ],
-  providers: [JwtStrategy],
+  providers: [JwtStrategy, AppInitializer, RoleService, InsertUserService],
 })
 export class AppModule {}
