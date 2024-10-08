@@ -6,6 +6,7 @@ import { TournamentEvent } from './entities/tournament-event.entity';
 import { Repository } from 'typeorm';
 import { CheckTournamentService } from '../tournament/services/find.tournament-by-id.service';
 import { FindTournamentEventsBytIdService } from './services/find-all-tournament-by-tId.service';
+import { CheckTournamentEventService } from './services/check-if-user-has-been-roll.service';
 
 @Injectable()
 export class TournamentEventService {
@@ -14,11 +15,18 @@ export class TournamentEventService {
     private readonly tournamentEventRepository: Repository<TournamentEvent>,
     private readonly checkTournamentService: CheckTournamentService,
     private readonly findTournamentEventsBytIdService: FindTournamentEventsBytIdService,
+    private readonly checkTournamentEventService: CheckTournamentEventService,
   ) {}
+
+  private getRandomScore(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   async enrollUser(
     UserId: number,
     createTournamentEventDto: CreateTournamentEventDto,
   ): Promise<TournamentEvent> {
+    await this.checkTournamentEventService.checkTournamentEvent(UserId);
     await this.checkTournamentService.checkTournament(
       createTournamentEventDto.tournamentId,
     );
@@ -38,13 +46,27 @@ export class TournamentEventService {
     );
   }
 
-  startMatch(TournamentId: number) {}
+  async startMatch(tournamentId: number) {
+    tournamentId = tournamentId[1];
+    await this.checkTournamentService.checkTournament(tournamentId);
+    const usersInTournament =
+      await this.findTournamentEventsBytIdService.findAllTournamentEvents(
+        tournamentId,
+      );
+    const tournamentEventsMap = new Map<number, TournamentEvent>();
+    usersInTournament.forEach((event) => {
+      tournamentEventsMap.set(event.userId, event);
+    });
 
-  update(id: number, updateTournamentEventDto: UpdateTournamentEventDto) {
-    return `This action updates a #${id} tournamentEvent`;
-  }
+    for (const tournamentEvent of tournamentEventsMap.values()) {
+      const randomScore = this.getRandomScore(0, 10000);
+      tournamentEvent.score = randomScore;
+      await this.tournamentEventRepository.update(
+        { id: tournamentEvent.id },
+        { score: randomScore },
+      );
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} tournamentEvent`;
+    return usersInTournament;
   }
 }

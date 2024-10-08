@@ -10,16 +10,24 @@ export class FindTournamentEventsBytIdService {
     private readonly tournamentEventRepository: Repository<TournamentEvent>,
   ) {}
 
-  async findAllTournamentEvents(
-    tournamentId: number,
-  ): Promise<TournamentEvent[]> {
+  async findAllTournamentEvents(tournamentId: number): Promise<any[]> {
     const tournamentsEvent = await this.tournamentEventRepository.find({
       where: { tournamentId },
       relations: ['user'],
     });
+
     if (!tournamentsEvent) {
       throw new NotFoundException('tournament not found');
     }
-    return tournamentsEvent;
+
+    const transformedEvents = tournamentsEvent.map((event) => ({
+      id: event.id,
+      tournamentId: event.tournamentId,
+      userId: event.userId,
+      score: event.score,
+      user: event.user?.email,
+    }));
+
+    return transformedEvents;
   }
 }
