@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity('tournamentEvents')
-export class TournamentEvent {
+export class ResultsTournament {
   @PrimaryGeneratedColumn({ type: 'integer' })
   id: number;
 
@@ -19,14 +19,17 @@ export class TournamentEvent {
   @Column({ type: 'integer' })
   userId: number;
 
-  @Column({ type: 'integer', nullable: true })
-  score: number;
+  @Column({ type: 'text', nullable: true })
+  winner: string;
 
-  @ManyToOne(() => User, (user) => user.tournamentEvents)
+  @Column({ type: 'varchar', nullable: true })
+  looser: string;
+
+  @ManyToOne(() => User, (user) => user)
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(() => Tournament, (tournament) => tournament.tournamentEvents)
+  @ManyToOne(() => Tournament, (tournament) => tournament)
   @JoinColumn({ name: 'tournamentId' })
   tournament: Tournament;
 }

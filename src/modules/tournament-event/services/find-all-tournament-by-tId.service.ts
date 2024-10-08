@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TournamentEvent } from '../entities/tournament-event.entity';
@@ -12,12 +16,15 @@ export class FindTournamentEventsBytIdService {
 
   async findAllTournamentEvents(tournamentId: number): Promise<any[]> {
     const tournamentsEvent = await this.tournamentEventRepository.find({
-      where: { tournamentId },
+      where: { tournamentId: tournamentId },
       relations: ['user'],
     });
 
     if (!tournamentsEvent) {
       throw new NotFoundException('tournament not found');
+    }
+    if (tournamentsEvent.length === 0) {
+      throw new BadRequestException("Tournament doesn't have enough player");
     }
 
     const transformedEvents = tournamentsEvent.map((event) => ({

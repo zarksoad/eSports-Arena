@@ -7,9 +7,12 @@ import { CheckTournamentService } from '../tournament/services/find.tournament-b
 import { Tournament } from '../tournament/entities/tournament.entity';
 import { FindTournamentEventsBytIdService } from './services/find-all-tournament-by-tId.service';
 import { CheckTournamentEventService } from './services/check-if-user-has-been-roll.service';
+import { ResultsTournament } from './entities/result-event.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TournamentEvent, Tournament])],
+  imports: [
+    TypeOrmModule.forFeature([TournamentEvent, Tournament, ResultsTournament]),
+  ],
   controllers: [TournamentEventController],
   providers: [
     TournamentEventService,

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { TournamentEventService } from './tournament-event.service';
 import { CreateTournamentEventDto } from './dto/create-tournament-event.dto';
 import { UserId } from 'src/common/decorators/user/user-Id.decorator';
@@ -14,7 +22,6 @@ export class TournamentEventController {
   ) {}
 
   @Post()
-  @Roles(1, 2)
   enrollUser(
     @UserId() id: number,
     @Body() createTournamentEventDto: CreateTournamentEventDto,
@@ -25,11 +32,12 @@ export class TournamentEventController {
   @Patch()
   @Roles(1)
   startMatch(@Body() tournamentId: number) {
+    tournamentId = tournamentId['tournamentId'];
     return this.tournamentEventService.startMatch(tournamentId);
   }
 
   @Get(':id')
-  findAll(TournamentId: number) {
-    return this.tournamentEventService.findAllTournamentEventById(TournamentId);
+  findAll(@Param('id') tournamentId: number) {
+    return this.tournamentEventService.findAllTournamentEventById(tournamentId);
   }
 }
