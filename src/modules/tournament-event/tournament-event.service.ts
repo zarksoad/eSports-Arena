@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TournamentEvent } from './entities/tournament-event.entity';
 import { Repository } from 'typeorm';
 import { CheckTournamentService } from '../tournament/services/find.tournament-by-id.service';
+import { FindTournamentEventsBytIdService } from './services/find-all-tournament-by-tId.service';
 
 @Injectable()
 export class TournamentEventService {
@@ -12,6 +13,7 @@ export class TournamentEventService {
     @InjectRepository(TournamentEvent)
     private readonly tournamentEventRepository: Repository<TournamentEvent>,
     private readonly checkTournamentService: CheckTournamentService,
+    private readonly findTournamentEventsBytIdService: FindTournamentEventsBytIdService,
   ) {}
   async enrollUser(
     UserId: number,
@@ -21,19 +23,22 @@ export class TournamentEventService {
       createTournamentEventDto.tournamentId,
     );
     createTournamentEventDto.userId = UserId;
+    createTournamentEventDto.score = 0;
     const newTournamentEvent = this.tournamentEventRepository.create(
       createTournamentEventDto,
     );
     return this.tournamentEventRepository.save(newTournamentEvent);
   }
 
-  async findAllTournamentEventById(): Promise<TournamentEvent[]> {
-    return await this.tournamentEventRepository.find();
+  async findAllTournamentEventById(
+    tournamentId: number,
+  ): Promise<TournamentEvent[]> {
+    return await this.findTournamentEventsBytIdService.findAllTournamentEvents(
+      tournamentId,
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tournamentEvent`;
-  }
+  startMatch(TournamentId: number) {}
 
   update(id: number, updateTournamentEventDto: UpdateTournamentEventDto) {
     return `This action updates a #${id} tournamentEvent`;

@@ -5,10 +5,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TournamentEvent } from './entities/tournament-event.entity';
 import { CheckTournamentService } from '../tournament/services/find.tournament-by-id.service';
 import { Tournament } from '../tournament/entities/tournament.entity';
+import { FindTournamentEventsBytIdService } from './services/find-all-tournament-by-tId.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([TournamentEvent, Tournament])],
   controllers: [TournamentEventController],
-  providers: [TournamentEventService, CheckTournamentService],
+  providers: [
+    TournamentEventService,
+    CheckTournamentService,
+    FindTournamentEventsBytIdService,
+  ],
 })
 export class TournamentEventModule {}

@@ -7,4 +7,8 @@ export class CreateTournamentEventDto {
   @IsOptional()
   @IsNumber({}, { message: 'UserId should be a number' })
   userId: number;
+
+  @IsOptional()
+  @IsNumber({}, { message: 'score should be a number' })
+  score: number;
 }

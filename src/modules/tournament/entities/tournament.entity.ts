@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/modules/auth/entities/user.entity';
+import { TournamentEvent } from 'src/modules/tournament-event/entities/tournament-event.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('tournaments')
 export class Tournament {
@@ -10,4 +18,10 @@ export class Tournament {
 
   @Column({ type: 'boolean', default: true })
   status: boolean;
+
+  @OneToMany(
+    () => TournamentEvent,
+    (tournamentEvent) => tournamentEvent.tournament,
+  )
+  tournamentEvents: TournamentEvent[];
 }
