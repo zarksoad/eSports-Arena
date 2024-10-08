@@ -1,34 +1,43 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { TournamentEventService } from './tournament-event.service';
 import { CreateTournamentEventDto } from './dto/create-tournament-event.dto';
-import { UpdateTournamentEventDto } from './dto/update-tournament-event.dto';
+import { UserId } from 'src/common/decorators/user/user-Id.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt.auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
-@Controller('tournament-event')
+@Controller('tournament-events')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class TournamentEventController {
-  constructor(private readonly tournamentEventService: TournamentEventService) {}
+  constructor(
+    private readonly tournamentEventService: TournamentEventService,
+  ) {}
 
   @Post()
-  create(@Body() createTournamentEventDto: CreateTournamentEventDto) {
-    return this.tournamentEventService.create(createTournamentEventDto);
+  enrollUser(
+    @UserId() id: number,
+    @Body() createTournamentEventDto: CreateTournamentEventDto,
+  ) {
+    return this.tournamentEventService.enrollUser(id, createTournamentEventDto);
   }
 
-  @Get()
-  findAll() {
-    return this.tournamentEventService.findAll();
+  @Patch()
+  @Roles(1)
+  startMatch(@Body() tournamentId: number) {
+    tournamentId = tournamentId['tournamentId'];
+    return this.tournamentEventService.startMatch(tournamentId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tournamentEventService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTournamentEventDto: UpdateTournamentEventDto) {
-    return this.tournamentEventService.update(+id, updateTournamentEventDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tournamentEventService.remove(+id);
+  findAll(@Param('id') tournamentId: number) {
+    return this.tournamentEventService.findAllTournamentEventById(tournamentId);
   }
 }

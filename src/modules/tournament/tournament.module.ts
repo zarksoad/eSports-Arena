@@ -9,5 +9,6 @@ import { CheckTournamentService } from './services/find.tournament-by-id.service
   imports: [TypeOrmModule.forFeature([Tournament])],
   controllers: [TournamentController],
   providers: [TournamentService, CheckTournamentService],
+  exports: [CheckTournamentService],
 })
 export class TournamentModule {}

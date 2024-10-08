@@ -3,9 +3,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from './role.entity';
+import { TournamentEvent } from 'src/modules/tournament-event/entities/tournament-event.entity';
 
 @Entity('users')
 export class User {
@@ -24,4 +26,7 @@ export class User {
   @ManyToOne(() => Role, (role) => role.users)
   @JoinColumn({ name: 'role_id' })
   role: Role;
+
+  @OneToMany(() => TournamentEvent, (tournamentEvent) => tournamentEvent.user)
+  tournamentEvents: TournamentEvent[];
 }
